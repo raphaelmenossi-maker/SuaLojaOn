@@ -1,0 +1,20 @@
+{
+  "config": {
+    "storeName": "SuaLojaOn",
+    "tagline": "Catálogo online — peça pelo WhatsApp e receba em casa",
+    "whatsapp": "55169936180637",
+    "instagram": "@ateliedalu",
+    "city": "Ribeirão Preto",
+    "pixKey": "40fa5df4-bf62-4bd6-8d32-5fd9037c7220",
+    "pixName": "RAPHAEL",
+    "pixCity": "RIBEIRAO PRETO",
+    "paymentNote": "Pagamento via Pix (QR Code) ou combinando na entrega.",
+    "shippingFee": 8,
+    "freeShippingOver": 150,
+    "deliveryNote": "Entregas das 9h às 18h, de segunda a sábado.",
+    "remoteCatalogUrl": "https://raphaelmenossi-maker.github.io/SuaLojaOn/catalogo.json",
+    "contactName": "Raphael"
+  },
+  "products": [],
+  "orders": []
+}

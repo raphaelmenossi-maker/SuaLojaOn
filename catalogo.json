@@ -1,0 +1,55 @@
+{
+  "config": {
+    "storeName": "SuaLojaOn",
+    "tagline": "Catálogo online — peça pelo WhatsApp e receba em casa",
+    "whatsapp": "55169936180637",
+    "instagram": "@minhaloja",
+    "city": "Ribeirão Preto",
+    "pixKey": "40fa5df4-bf62-4bd6-8d32-5fd9037c7220",
+    "pixName": "RAPHAEL",
+    "pixCity": "RIBEIRAO PRETO",
+    "paymentNote": "Pagamento via Pix ou combinando na entrega.",
+    "shippingFee": 8,
+    "freeShippingOver": 150,
+    "deliveryNote": "Entregas das 9h às 18h.",
+    "contactName": "Raphael"
+  },
+  "products": [
+    {
+      "id": "p1",
+      "name": "Nome do produto",
+      "price": 49.9,
+      "oldPrice": 0,
+      "desc": "Descrição curta do produto: material, tamanho, o que vem na caixa.",
+      "category": "Categoria",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "stock": 10,
+      "emoji": "📦",
+      "image": "",
+      "active": true,
+      "featured": false
+    },
+    {
+      "id": "p2",
+      "name": "Outro produto",
+      "price": 79.9,
+      "oldPrice": 99.9,
+      "desc": "Este está em promoção — o preço antigo aparece riscado.",
+      "category": "Categoria",
+      "tags": [
+        "promoção"
+      ],
+      "stock": 4,
+      "emoji": "✨",
+      "image": "",
+      "active": true,
+      "featured": true
+    }
+  ],
+  "categories": [
+    "Categoria"
+  ]
+}
