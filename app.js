@@ -148,29 +148,7 @@ async function loadInitialData() {
     store.remoteStatus = await store.loadRemote();
   }
 }
-  await store.init();
-  if (store.mode === 'server') return;
-
-  // já existe catálogo local? (do navegador ou do catálogo remoto)
-  if ((store.state.products || []).length) return;
-
-  // sem catálogo local: usa o publicado (dados.json) e, sem ele, o exemplo
-  let seed = null;
-  try {
-    const res = await fetch('./dados.json', { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      // o arquivo publicado manda: mesmo com 0 produtos (catálogo vazio de propósito)
-      if (data && (Array.isArray(data.products) || data.config)) seed = data;
-    }
-  } catch { /* sem dados.json */ }
-
-  if (!seed) seed = DEMO;
-  store.state.config = { ...store.state.config, ...(seed.config || {}) };
-  store.state.products = Array.isArray(seed.products) ? seed.products : [];
-  store.state.categories = store.deriveCategories();
-  store.persist();
-}
+  
 
 /* ------------------------------- inicialização ------------------------------- */
 
