@@ -62,13 +62,13 @@
       "Jundiaí": 160,
       "Votuporanga": 160
     },
-    "updatedAt": "2026-11-14T04:11:46"
+    "updatedAt": "2026-11-14T04:26:44"
   },
   "products": [
     {
       "id": "p1",
       "name": "Galão de detergente 5 litros verde",
-      "price": 39.9,
+      "price": 23.9,
       "oldPrice": 0.0,
       "desc": "Detergente líquido concentrado em galão de 5 litros, na cor verde. Rende até 3 vezes mais que as embalagens pequenas, dissolve rápido na máquina de lavar e deixa a roupa limpa e com cheiro suave. Tampa de rosca com vedação e alça lateral para facilitar o manuseio.",
       "category": "Detergentes",
@@ -85,7 +85,7 @@
     {
       "id": "p2",
       "name": "Desinfetante 2 litros PET azul",
-      "price": 19.9,
+      "price": 12.9,
       "oldPrice": 0.0,
       "desc": "Desinfetante líquido em garrafa PET de 2 litros, na cor azul. Elimina 99,9% de bactérias e vírus, deixando a casa limpa e perfumada. Garrafa leve, com tampa de rosca que veda bem e cabe fácil em armários e carrinhos de limpeza.",
       "category": "Desinfetantes",
