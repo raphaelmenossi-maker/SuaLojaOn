@@ -310,6 +310,19 @@ Rode o script por cron na sua máquina ou no backend (Render):
 
 ---
 
+## Produto com link externo (revenda)
+
+Quando o produto tem o campo `link` preenchido (ex.: uma oferta no Mercado Livre):
+
+- o card mostra **[Comprar agora]** e abre o link em nova aba;
+- **não** entra no carrinho local — a compra (e o frete, que lá costuma ser grátis)
+  acontece na loja parceira;
+- a folha do produto não tem contador de quantidade.
+
+Ou seja: **frete da sua loja nunca é cobrado em produto que você não vende.**
+
+---
+
 ## Caminho 5 — Botar o link onde o tráfego já está
 
 - **Instagram**: Configurações → cole a URL do catálogo na *bio*.
