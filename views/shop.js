@@ -51,6 +51,12 @@ const isOut = (stock) => !!stock && stock.level === 'out';
 
 export function renderHome(root) {
   const cfg = store.state.config;
+  // aviso: produto de link externo nao entra no carrinho local
+  store.onChange((e) => {
+    if (e.detail === 'erro:link-externo') {
+      toast('Este produto é comprado direto na loja parceira (o frete é o de lá)', 'info');
+    }
+  });
   const products = activeProducts();
   const categories = [...new Set(products.map((p) => p.category).filter(Boolean))];
 
@@ -151,13 +157,18 @@ function productCard(product) {
         promo ? h('s', { text: money(old) }) : null),
       stock && stock.level !== 'out' ? h('small', { class: `card__stock ${stock.css}`, text: stock.text }) : null,
       h('div', { class: 'card__actions' },
-        h('button', {
-          class: 'btn btn--primary btn--block',
-          disabled: isOut(stock),
-          onClick: () => {
-            if (store.addToCart(product.id, 1)) toast(`${product.name} adicionado ao carrinho`, 'success');
-          },
-        }, isOut(stock) ? 'Indisponível' : 'Adicionar'),
+        product.link
+          ? h('a', {
+            class: 'btn btn--primary btn--block',
+            href: product.link, target: '_blank', rel: 'noopener',
+          }, 'Comprar agora')
+          : h('button', {
+            class: 'btn btn--primary btn--block',
+            disabled: isOut(stock),
+            onClick: () => {
+              if (store.addToCart(product.id, 1)) toast(`${product.name} adicionado ao carrinho`, 'success');
+            },
+          }, isOut(stock) ? 'Indisponível' : 'Adicionar'),
         h('button', { class: 'icon-btn icon-btn--soft', title: 'Compartilhar', onClick: () => openProductShare(product) },
           h('span', { html: '<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 16.1c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.03-.47-.09-.7l7.05-4.11A2.99 2.99 0 0 0 21 5a3 3 0 1 0-3-3c0 .24.04.47.09.7L8.04 8.84A2.99 2.99 0 0 0 3 12a3 3 0 1 0 3 3c0-.24-.04-.47-.09-.7l7.12 4.16c-.05.21-.08.43-.08.65a2.92 2.92 0 0 0 5.84 0c0-1.6-1.32-2.91-2.91-2.91Z"/></svg>' })))));
 }
@@ -193,7 +204,7 @@ export function openProductSheet(id) {
         promo ? h('s', { text: money(old) }) : null)),
     product.desc ? h('p', { class: 'product__desc', text: product.desc }) : null,
     (product.tags || []).length ? h('div', { class: 'tags' }, ...product.tags.map((t) => h('span', { class: 'tag', text: t }))) : null,
-    h('div', { class: 'qty' },
+    product.link ? null : h('div', { class: 'qty' },
       h('button', { class: 'qty__btn', onClick: () => setQty(qty - 1) }, '−'),
       qtyLabel,
       h('button', { class: 'qty__btn', onClick: () => setQty(qty + 1) }, '+')));
@@ -359,6 +370,7 @@ export function renderCheckout(root) {
     name: cliente.name, phone: cliente.phone, email: cliente.email,
     fulfillment: 'delivery', address: '', complement: '', notes: '',
     payment: cfg.pixKey ? 'pix' : 'whatsapp',
+    freteCalculado: false,
   };
   let etapa = cliente.name && cliente.phone ? 2 : 1;
 
@@ -442,6 +454,7 @@ export function renderCheckout(root) {
           freteMsg.textContent = 'Consultando...';
           const resultado = await calcularFrete(cepInput.value, { ...cfg, _subtotal: totals.subtotal }, store.apiBase || '');
           if (resultado.ok) {
+            state.freteCalculado = true;
             store.setShippingCalculado(resultado.valor);
             freteMsg.textContent = `${resultado.msg}${resultado.cidade ? ` • ${resultado.cidade}` : ''}`;
           } else {
@@ -484,7 +497,10 @@ export function renderCheckout(root) {
           h('span', { text: `${l.qty}x ${l.product.name}` }),
           h('strong', { text: money(l.total) }))),
         h('div', { class: 'cart__row' }, h('span', { text: 'Entrega' }), h('strong', { text: t.shipping ? money(t.shipping) : 'Grátis' })),
-        h('div', { class: 'cart__row cart__row--total' }, h('span', { text: 'Total' }), h('strong', { text: money(t.total) })));
+        h('div', { class: 'cart__row cart__row--total' }, h('span', { text: 'Total' }), h('strong', { text: money(t.total) })),
+        (!state.freteCalculado && t.shipping)
+          ? h('p', { class: 'hint', text: 'Entrega no valor fixo da loja — informe o CEP acima para calcular pela distância.' })
+          : null);
     };
 
     const atualizaResumo = () => {
