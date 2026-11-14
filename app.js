@@ -72,7 +72,15 @@ function buildHeader() {
     h('div', { class: 'topbar__actions' },
       h('a', { class: 'icon-btn icon-btn--soft', href: '#/checkout', title: 'Finalizar pedido' },
         h('span', { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 3h6l1 3H8l1-3Z"/><path d="M6 6h12l-1 14H7L6 6Z"/><path d="M10 11v5M14 11v5"/></svg>' })),
-      h('button', { class: 'icon-btn icon-btn--soft cart-btn', title: 'Carrinho', onClick: () => { location.hash = '#/carrinho'; } },
+      h('button', {
+        class: 'icon-btn icon-btn--soft cart-btn', title: 'Carrinho',
+        onClick: () => {
+          // se ja estamos na rota do carrinho, mudar o hash nao dispara nada:
+          // nesse caso abre a folha direto
+          if (location.hash === '#/carrinho') { openCart(); return; }
+          location.hash = '#/carrinho';
+        },
+      },
         h('span', { html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>' }),
         cartBadge)));
   return header;
@@ -131,6 +139,7 @@ async function loadInitialData() {
       const res = await fetch('./dados.json', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
+        // o arquivo publicado manda: mesmo com 0 produtos (catálogo vazio de propósito)
         if (data && (Array.isArray(data.products) || data.config)) seed = data;
       }
     } catch { /* sem dados.json */ }
@@ -148,7 +157,6 @@ async function loadInitialData() {
     store.remoteStatus = await store.loadRemote();
   }
 }
-  
 
 /* ------------------------------- inicialização ------------------------------- */
 

@@ -5,6 +5,7 @@ import { h, qs, qsa, toast, openSheet, confirmDialog, money, formatDateBR } from
 import { parseCsv, toCsv, parseNumberBR } from '../lib/csv.js';
 import { buildPostText, copyText, openShare, productLink, storeLink, SHARE_TARGETS, nativeShare, buildShareCard, downloadCanvas } from '../lib/share.js';
 import { openShareStudio } from './shop.js';
+import { tabelaDeTexto, textoDaTabela } from '../lib/frete.js';
 
 const STATUS = {
   novo: { label: 'Novo', class: 'st--novo' },
@@ -586,6 +587,7 @@ function renderConfig(root) {
     h('span', { class: 'field__label', text: label }), control, hint ? h('small', { class: 'field__hint', text: hint }) : null);
 
   let logo = cfg.logo || '';
+  const tabelaTexto = textoDaTabela(cfg.distanceTable || {});
   const logoPreview = h('div', { class: 'preview' },
     logo ? h('img', { src: logo, alt: 'Logo' }) : h('span', { class: 'preview__emoji', text: '🏪' }));
   const logoInput = h('input', { type: 'file', accept: 'image/*', class: 'hidden', onChange: (e) => {
@@ -620,8 +622,17 @@ function renderConfig(root) {
 
   form.appendChild(h('h2', { class: 'section-title', text: 'Entrega' }));
   form.appendChild(h('div', { class: 'form-row' },
-    field('Taxa de entrega (R$)', h('input', { class: 'input', type: 'number', step: '0.01', min: '0', value: cfg.shippingFee || 0 })),
+    field('Taxa fixa de entrega (R$)', h('input', { class: 'input', type: 'number', step: '0.01', min: '0', value: cfg.shippingFee || 0 }), 'usada quando o CEP não é calculado'),
     field('Frete grátis acima de (R$)', h('input', { class: 'input', type: 'number', step: '0.01', min: '0', value: cfg.freeShippingOver || 0 }), '0 = desativado')));
+  form.appendChild(h('div', { class: 'form-row' },
+    field('Frete base (R$)', h('input', { class: 'input', type: 'number', step: '0.01', min: '0', value: cfg.shippingBase ?? 5 }), 'valor fixo de toda entrega'),
+    field('Valor por km (R$)', h('input', { class: 'input', type: 'number', step: '0.01', min: '0', value: cfg.shippingPerKm ?? 0.5 }), 'soma ao valor base')));
+  form.appendChild(h('div', { class: 'form-row' },
+    field('Raio de entrega (km)', h('input', { class: 'input', type: 'number', step: '1', min: '0', value: cfg.shippingMaxKm ?? 60 }), 'acima disso,combine pelo WhatsApp'),
+    field('CEP da loja', h('input', { class: 'input', value: cfg.storeCep || '', placeholder: '14010-000' }), 'origem da distância')));
+  form.appendChild(field('Tabela de distância por cidade', h('textarea', {
+    class: 'input input--area', rows: '6', placeholder: 'Ribeirão Preto=0\nFranca=90\nBarretos=95',
+  }, tabelaTexto), 'Uma cidade por linha, no formato Nome=km. É o que permite calcular o frete sem internet.'));
   form.appendChild(field('Instruções de entrega', h('textarea', { class: 'input input--area', rows: '2', value: cfg.deliveryNote || '' })));
 
   form.appendChild(h('h2', { class: 'section-title', text: 'Segurança e dados' }));
@@ -734,8 +745,13 @@ function renderConfig(root) {
       pixName: get('Nome do recebedor').trim(),
       pixCity: get('Cidade do recebedor').trim(),
       paymentNote: get('Observação sobre pagamento').trim(),
-      shippingFee: parseNumberBR(get('Taxa de entrega (R$)')),
+      shippingFee: parseNumberBR(get('Taxa fixa de entrega (R$)')),
       freeShippingOver: parseNumberBR(get('Frete grátis acima de (R$)')),
+      shippingBase: parseNumberBR(get('Frete base (R$)')),
+      shippingPerKm: parseNumberBR(get('Valor por km (R$)')),
+      shippingMaxKm: parseNumberBR(get('Raio de entrega (km)')),
+      storeCep: get('CEP da loja').trim(),
+      distanceTable: tabelaDeTexto(get('Tabela de distância por cidade')),
       deliveryNote: get('Instruções de entrega').trim(),
       adminPin: get('PIN do painel').trim(),
       remoteCatalogUrl: get('URL do catálogo remoto').trim(),

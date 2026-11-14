@@ -90,7 +90,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 /* ------------------------------- topo ------------------------------- */
 
 .topbar {
-  position: sticky; top: 0; z-index: 40;
+  position: sticky; top: 0; z-index: 70;
   background: color-mix(in srgb, var(--surface) 88%, transparent);
   backdrop-filter: saturate(1.6) blur(12px);
   border-bottom: 1px solid var(--border);
@@ -309,8 +309,8 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .sheet-backdrop.is-open { opacity: 1; }
 
 .sheet {
-  position: fixed; z-index: 61; left: 0; right: 0; bottom: 0;
-  max-height: 92vh; display: flex; flex-direction: column;
+  position: fixed; z-index: 65; left: 0; right: 0; bottom: 0;
+  max-height: calc(100vh - 68px - env(safe-area-inset-top)); display: flex; flex-direction: column;
   background: var(--surface);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   box-shadow: var(--shadow-lg);
@@ -320,7 +320,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 }
 .sheet.is-open { transform: translateY(0); }
 .sheet--sm { max-width: 440px; margin: 0 auto; bottom: 16px; border-radius: var(--radius-lg); }
-.sheet--lg { max-height: 94vh; }
+.sheet--lg { max-height: calc(100vh - 68px - env(safe-area-inset-top)); }
 
 .sheet__head {
   display: flex; align-items: flex-start; gap: 12px;
@@ -629,3 +629,10 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .customer-card > div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .customer-card strong { font-size: 15px; }
 .customer-card span { font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ------------------------- frete por CEP ------------------------- */
+
+.frete-box { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.frete-box .input { flex: 1; min-width: 140px; }
+.frete-box + .field__hint,
+.frete-box ~ .hint { flex-basis: 100%; }

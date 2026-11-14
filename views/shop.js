@@ -3,10 +3,18 @@
 import { store } from '../lib/store.js';
 import { h, qs, qsa, toast, openSheet, confirmDialog, money, formatDateBR } from '../lib/ui.js';
 import { buildPixPayload } from '../lib/pix.js';
+import { calcularFrete, soDigitos } from '../lib/frete.js';
 import {
   buildPostText, copyText, openShare, productLink, storeLink,
   SHARE_TARGETS, nativeShare, buildShareCard, downloadCanvas,
 } from '../lib/share.js';
+
+/** Formata a data da última atualização de preços (ISO -> DD/MM/AAAA). */
+export function formatarData(valor) {
+  const d = new Date(valor);
+  if (Number.isNaN(d.getTime())) return String(valor);
+  return d.toLocaleDateString('pt-BR');
+}
 
 /** Normaliza número de WhatsApp para o formato internacional (55...). */
 export function waNumber(raw) {
@@ -248,6 +256,9 @@ export function openProductShare(product) {
 /* ============================ CARRINHO ============================ */
 
 export function openCart() {
+  // fecha qualquer folha aberta antes (evita duas folhas empilhadas)
+  qsa('.sheet, .sheet-backdrop').forEach((n) => n.remove());
+  document.body.classList.remove('no-scroll');
   const content = h('div', { class: 'cart' });
   const { close, body } = openSheet({ title: 'Carrinho', content, size: 'lg' });
 
@@ -370,7 +381,7 @@ export function renderCheckout(root) {
     form.appendChild(h('h2', { class: 'section-title', text: 'Seu cadastro' }));
     form.appendChild(h('p', { class: 'hint', text: 'Cadastre-se uma vez para agilizar as próximas compras. Seus dados ficam salvos só neste aparelho.' }));
     form.appendChild(field('Nome completo', input({ required: true, value: state.name, placeholder: 'Como te chamamos?', onInput: (e) => { state.name = e.target.value; } })));
-    form.appendChild(field('WhatsApp', input({ required: true, inputmode: 'tel', value: state.phone, placeholder: '(16) 93618-0637', onInput: (e) => { state.phone = e.target.value; } })));
+    form.appendChild(field('WhatsApp', input({ required: true, inputmode: 'tel', value: state.phone, placeholder: '(00) 00000-0000', onInput: (e) => { state.phone = e.target.value; } })));
     form.appendChild(field('E-mail (opcional)', input({ type: 'email', value: state.email, placeholder: 'Para receber a confirmação do pedido', onInput: (e) => { state.email = e.target.value; } })));
     form.appendChild(h('button', { class: 'btn btn--primary btn--block btn--lg', type: 'submit' }, 'Continuar para o pedido'));
 
@@ -411,6 +422,28 @@ export function renderCheckout(root) {
     form.appendChild(field('Como prefere receber?', h('div', { class: 'segmented' },
       h('button', { type: 'button', class: 'segmented__btn is-active', dataset: { v: 'delivery' }, onClick: (e) => pickSeg(e, 'delivery') }, 'Entrega'),
       h('button', { type: 'button', class: 'segmented__btn', dataset: { v: 'pickup' }, onClick: (e) => pickSeg(e, 'pickup') }, 'Retirar no local'))));
+    // ---- frete por CEP: R$ fixo + por km ----
+    const cepInput = input({ placeholder: '00000-000', inputmode: 'numeric', maxlength: '9' });
+    const freteMsg = h('p', { class: 'hint', id: 'frete-msg' });
+    form.appendChild(field('Frete por CEP', h('div', { class: 'frete-box' },
+      cepInput,
+      h('button', {
+        type: 'button', class: 'btn btn--ghost btn--sm',
+        onClick: async () => {
+          freteMsg.textContent = 'Consultando...';
+          const resultado = await calcularFrete(cepInput.value, { ...cfg, _subtotal: totals.subtotal }, store.apiBase || '');
+          if (resultado.ok) {
+            store.setShippingCalculado(resultado.valor);
+            freteMsg.textContent = `${resultado.msg}${resultado.cidade ? ` • ${resultado.cidade}` : ''}`;
+          } else {
+            store.setShippingCalculado(null);
+            freteMsg.textContent = resultado.msg;
+          }
+          atualizaResumo();
+        },
+      }, 'Calcular'))));
+    form.appendChild(freteMsg);
+
     form.appendChild(field('Endereço', input({ placeholder: 'Rua, número, bairro, cidade', onInput: (e) => { state.address = e.target.value; } })));
     form.appendChild(field('Complemento', input({ placeholder: 'Apto, bloco, ponto de referência', onInput: (e) => { state.complement = e.target.value; } })));
     form.appendChild(field('Observações', h('textarea', { class: 'input input--area', rows: '2', placeholder: 'Ex.: entregar depois das 18h', onInput: (e) => { state.notes = e.target.value; } })));
@@ -434,15 +467,23 @@ export function renderCheckout(root) {
       if (value === 'delivery') form.classList.remove('is-pickup'); else form.classList.add('is-pickup');
     }
 
-    const summary = h('div', { class: 'summary' },
-      h('h2', { class: 'section-title', text: 'Resumo' }),
-      ...store.cartLines().map((l) => h('div', { class: 'cart__row' },
-        h('span', { text: `${l.qty}x ${l.product.name}` }),
-        h('strong', { text: money(l.total) }))),
-      h('div', { class: 'cart__row' }, h('span', { text: 'Entrega' }), h('strong', { text: totals.shipping ? money(totals.shipping) : 'Grátis' })),
-      h('div', { class: 'cart__row cart__row--total' }, h('span', { text: 'Total' }), h('strong', { text: money(totals.total) })));
+    const resumo = () => {
+      const t = store.cartTotals();
+      return h('div', { class: 'summary', id: 'resumo' },
+        h('h2', { class: 'section-title', text: 'Resumo' }),
+        ...store.cartLines().map((l) => h('div', { class: 'cart__row' },
+          h('span', { text: `${l.qty}x ${l.product.name}` }),
+          h('strong', { text: money(l.total) }))),
+        h('div', { class: 'cart__row' }, h('span', { text: 'Entrega' }), h('strong', { text: t.shipping ? money(t.shipping) : 'Grátis' })),
+        h('div', { class: 'cart__row cart__row--total' }, h('span', { text: 'Total' }), h('strong', { text: money(t.total) })));
+    };
 
-    form.appendChild(summary);
+    const atualizaResumo = () => {
+      const antigo = qs('#resumo');
+      if (antigo) antigo.replaceWith(resumo());
+    };
+
+    form.appendChild(resumo());
     form.appendChild(h('button', { class: 'btn btn--primary btn--block btn--lg', type: 'submit' }, 'Finalizar pedido'));
 
     form.addEventListener('submit', (e) => {
@@ -561,6 +602,9 @@ export function footer() {
         cfg.contactName ? `WhatsApp · ${cfg.contactName}` : 'WhatsApp') : null,
       cfg.instagram ? h('a', { href: `https://instagram.com/${cfg.instagram.replace(/^@/, '')}`, target: '_blank', rel: 'noopener' }, 'Instagram') : null,
       h('a', { href: '#/admin' }, 'Painel administrativo')),
+    cfg.updatedAt
+      ? h('p', { class: 'footer__note', text: `Preços atualizados em ${formatarData(cfg.updatedAt)}` })
+      : null,
     h('p', { class: 'footer__note', text: '© ' + new Date().getFullYear() + ` ${cfg.storeName}` }));
 }
 

@@ -1,5 +1,7 @@
-/* Service worker: cache do app para funcionar offline. */
-const CACHE = 'catalogo-v1';
+/* Service worker: cache do app para funcionar offline.
+   Versão do cache: incremente ao mudar o app, senão o navegador pode servir
+   uma versão antiga do JS/CSS (o que deixa a loja quebrada sem erro visível). */
+const CACHE = 'catalogo-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -37,9 +39,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== location.origin) return; // catálogo remoto nunca é cacheado
 
-  // HTML e JSON vêm sempre da rede (para pegar atualizações do catálogo);
-  // o resto responde do cache e se atualiza em segundo plano.
-  const sempreDaRede = url.pathname.endsWith('.json') || request.mode === 'navigate' || url.pathname.endsWith('.html');
+  // HTML, JSON e JS vêm sempre da rede (app atualizado na hora, sem versão velha
+  // servida do cache); CSS, imagens e fontes vêm do cache e se atualizam depois.
+  const sempreDaRede = url.pathname.endsWith('.json')
+    || url.pathname.endsWith('.js')
+    || request.mode === 'navigate'
+    || url.pathname.endsWith('.html');
 
   event.respondWith((async () => {
     const cached = await caches.match(request);
