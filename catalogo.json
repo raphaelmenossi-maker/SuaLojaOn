@@ -70,14 +70,14 @@
       "name": "Galão de detergente 5 litros verde",
       "price": 23.9,
       "oldPrice": 0.0,
-      "desc": "Detergente líquido concentrado em galão de 5 litros, na cor verde. Rende até 3 vezes mais que as embalagens pequenas, dissolve rápido na máquina de lavar e deixa a roupa limpa e com cheiro suave. Tampa de rosca com vedação e alça lateral para facilitar o manuseio.",
+      "desc": "Galão (bombona) de 5 litros em plástico resistente, com alça integrada e tampa de rosca, cheio de detergente líquido verde. Rende muito mais que as embalagens pequenas, dissolve rápido na máquina de lavar e deixa a roupa limpa e com cheiro suave. Fácil de manusear e de guardar.",
       "category": "Detergentes",
       "tags": [
         "detergente; 5 litros; roupa; máquina de lavar"
       ],
       "stock": 20,
       "emoji": "🧴",
-      "image": "imagens/detergente-5l.jpg",
+      "image": "imagens/galao-5l.jpg",
       "active": true,
       "featured": true,
       "link": ""
@@ -87,7 +87,7 @@
       "name": "Desinfetante 2 litros PET azul",
       "price": 12.9,
       "oldPrice": 0.0,
-      "desc": "Desinfetante líquido em garrafa PET de 2 litros, na cor azul. Elimina 99,9% de bactérias e vírus, deixando a casa limpa e perfumada. Garrafa leve, com tampa de rosca que veda bem e cabe fácil em armários e carrinhos de limpeza.",
+      "desc": "Desinfetante líquido em garrafa PET de 2 litros, transparente na cor verde, com tampa de rosca. Elimina 99,9% de bactérias e vírus, deixando a casa limpa e perfumada. Garrafa leve, cabe fácil em armários e carrinhos de limpeza.",
       "category": "Desinfetantes",
       "tags": [
         "desinfetante; 2 litros; limpeza; desinfetar"
