@@ -210,19 +210,59 @@ Variáveis de ambiente: `PORT` (padrão 8080), `ADMIN_PIN`, `SECRET`.
 
 ---
 
-## Caminho 4 — Seu próprio domínio
+## Caminho 4 — Seu próprio domínio (sualojaon.com.br)
 
-1. Compre o domínio (`.com.br` no Registro.br ou `.com` no Cloudflare/Namecheap).
-2. Aponte um CNAME para o host do backend:
+### Passo 1 — comprar o domínio
 
-   | Host | Registro |
-   |---|---|
-   | Render | CNAME `meudominio.com.br` → `seu-servico.onrender.com` |
-   | Cloudflare Pages | CNAME `catalog` → `seu-projeto.pages.dev` |
-   | Netlify | CNAME `www` → `seu-site.netlify.app` |
+Para `.com.br` o registro é feito no **Registro.br** (≈ R$ 40/ano, exige CPF/CNPJ).
+A conferir a disponibilidade: <https://registro.br/tecnologia/ferramentas/whois>
 
-3. Ative HTTPS (todos esses hosts emitem certificado automático).
-4. No painel → Configurações → *PIN do painel* → defina um PIN forte.
+### Passo 2 — apontar o DNS
+
+No painel do Registro.br (ou do provedor de DNS que você escolher), crie:
+
+| Tipo | Host | Valor |
+|---|---|---|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `rfm92.github.io` |
+
+Os 4 registros A são obrigatórios para o domínio principal. O `www` pode ser
+redirecionado — o GitHub já redireciona um para o outro automaticamente.
+
+### Passo 3 — cadastrar o domínio no GitHub
+
+**Settings → Pages → Custom domain** → digite `sualojaon.com.br` → **Save**.
+O GitHub cria o arquivo `CNAME` no repositório e passa a checar o DNS
+(pode levar de 1 a 72 h por causa do `.com.br`).
+
+### Passo 4 — eu troco as URLs internas
+
+```bash
+python3 tools/configurar-dominio.py --dominio suaLojaOn.com.br            # confere
+python3 tools/configurar-dominio.py --dominio suaLojaOn.com.br --aplicar  # migra
+```
+
+O script confere o DNS **antes** de mudar qualquer coisa (se o domínio não
+apontar para o GitHub, ele não mexe — o site continua no ar no endereço antigo)
+e depois atualiza o catálogo remoto, as metatags de prévia e os guias.
+
+### Passo 5 — ativar o HTTPS
+
+Em **Settings → Pages**, marque **Enforce HTTPS**. O certificado é emitido
+automaticamente (pode levar até 24 h para a opção aparecer).
+
+### Se você cadastrar o domínio direto na interface do GitHub
+
+O GitHub cria o arquivo `CNAME` na raiz do repositório — **não apague esse arquivo**:
+é ele que segura o domínio.
+
+### Se for usar o backend (Caminho 3) junto
+
+Domínio próprio e backend são independentes: o GitHub Pages serve o site e a API
+do Render responde em outro endereço (que você aponta em *Configurações → URL da API*).
 
 O `og:image` / `og:url` (prévia do link nas redes) ficam em `web/index.html` —
 ajuste para o seu domínio depois de publicar.
