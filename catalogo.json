@@ -98,10 +98,23 @@
       "active": true,
       "featured": true,
       "link": ""
+    },
+    {
+      "id": "p3",
+      "name": "Cesto de roupa bambu 72 litros com tampa e forro",
+      "price": 58.1,
+      "oldPrice": 0.0,
+      "desc": "Cesto de roupa em bambu natural, 72 litros, com tampa, forro de tecido e alças de corda. Retangular e dobrável — dobra para guardar quando não está em uso. Deixa a roupa suja organizada e fora de vista, e combina com qualquer decoração de banheiro, quarto ou lavanderia. Produto vendido e pago no Mercado Livre: use o botão “Comprar agora” para concluir o pagamento com segurança lá.",
+      "category": "Casa",
+      "tags": [
+        "cesto; roupa; bambu; 72 litros; lavanderia; organização"
+      ],
+      "stock": 10,
+      "emoji": "🧺",
+      "image": "imagens/cesto-bambu-72l.jpg",
+      "active": true,
+      "featured": true,
+      "link": "https://www.mercadolivre.com.br/vittak-cesto-de-roupa-bambu-72-litros-liso-dobravel-retangular-com-tampa-e-forro/p/MLB53429974"
     }
-  ],
-  "categories": [
-    "Desinfetantes",
-    "Detergentes"
   ]
 }

@@ -196,12 +196,21 @@ export function openProductSheet(id) {
     h('div', { class: 'qty' },
       h('button', { class: 'qty__btn', onClick: () => setQty(qty - 1) }, '−'),
       qtyLabel,
-      h('button', { class: 'qty__btn', onClick: () => setQty(qty + 1) }, '+')),
-    product.link ? h('a', { class: 'btn btn--ghost btn--block', href: product.link, target: '_blank', rel: 'noopener' }, 'Comprar em outra loja') : null);
+      h('button', { class: 'qty__btn', onClick: () => setQty(qty + 1) }, '+')));
 
   const actions = [
     { label: 'Compartilhar', class: 'btn--ghost', onClick: () => { openProductShare(product); } },
-    {
+  ];
+
+  if (product.link) {
+    // produto vendido em outra loja: a compra acontece la
+    actions.push({
+      label: 'Comprar agora',
+      class: 'btn--primary',
+      onClick: () => window.open(product.link, '_blank', 'noopener'),
+    });
+  } else {
+    actions.push({
       label: 'Adicionar ao carrinho',
       class: 'btn--primary',
       onClick: (close) => {
@@ -211,8 +220,8 @@ export function openProductSheet(id) {
           openCart();
         }
       },
-    },
-  ];
+    });
+  }
 
   openSheet({ title: product.name, content, actions, size: 'lg' });
 }
