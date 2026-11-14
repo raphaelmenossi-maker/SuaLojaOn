@@ -61,44 +61,47 @@
       "Indaiatuba": 150,
       "Jundiaí": 160,
       "Votuporanga": 160
-    }
+    },
+    "updatedAt": "2026-11-14T04:11:46"
   },
   "products": [
     {
       "id": "p1",
-      "name": "Nome do produto",
-      "price": 49.9,
-      "oldPrice": 0,
-      "desc": "Descrição curta do produto: material, tamanho, o que vem na caixa.",
-      "category": "Categoria",
+      "name": "Galão de detergente 5 litros verde",
+      "price": 39.9,
+      "oldPrice": 0.0,
+      "desc": "Detergente líquido concentrado em galão de 5 litros, na cor verde. Rende até 3 vezes mais que as embalagens pequenas, dissolve rápido na máquina de lavar e deixa a roupa limpa e com cheiro suave. Tampa de rosca com vedação e alça lateral para facilitar o manuseio.",
+      "category": "Detergentes",
       "tags": [
-        "tag1",
-        "tag2"
+        "detergente; 5 litros; roupa; máquina de lavar"
       ],
-      "stock": 10,
-      "emoji": "📦",
-      "image": "",
+      "stock": 20,
+      "emoji": "🧴",
+      "image": "imagens/detergente-5l.jpg",
       "active": true,
-      "featured": false
+      "featured": true,
+      "link": ""
     },
     {
       "id": "p2",
-      "name": "Outro produto",
-      "price": 79.9,
-      "oldPrice": 99.9,
-      "desc": "Este está em promoção — o preço antigo aparece riscado.",
-      "category": "Categoria",
+      "name": "Desinfetante 2 litros PET azul",
+      "price": 19.9,
+      "oldPrice": 0.0,
+      "desc": "Desinfetante líquido em garrafa PET de 2 litros, na cor azul. Elimina 99,9% de bactérias e vírus, deixando a casa limpa e perfumada. Garrafa leve, com tampa de rosca que veda bem e cabe fácil em armários e carrinhos de limpeza.",
+      "category": "Desinfetantes",
       "tags": [
-        "promoção"
+        "desinfetante; 2 litros; limpeza; desinfetar"
       ],
-      "stock": 4,
-      "emoji": "✨",
-      "image": "",
+      "stock": 15,
+      "emoji": "🫧",
+      "image": "imagens/desinfetante-2l.jpg",
       "active": true,
-      "featured": true
+      "featured": true,
+      "link": ""
     }
   ],
   "categories": [
-    "Categoria"
+    "Desinfetantes",
+    "Detergentes"
   ]
 }
