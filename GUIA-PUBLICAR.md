@@ -245,6 +245,71 @@ Ajuste tudo em **Painel → Configurações → Entrega**.
 
 ---
 
+## Sincronizar preço e estoque pelo link do fornecedor
+
+Cada produto da planilha tem uma coluna `link` (a página dele no fornecedor).
+O script `tools/sincronizar-precos.py` visita esses links, lê o preço e o estoque,
+atualiza a planilha e regenera o `catalogo.json`.
+
+```bash
+# ver o que mudaria, sem gravar
+python3 tools/sincronizar-precos.py --dry-run
+
+# gravar na planilha + catálogo e publicar no GitHub
+python3 tools/sincronizar-precos.py --push
+```
+
+### O que ele faz
+
+| | |
+|---|---|
+| **Preço** | procura o valor na página e atualiza a coluna `preco` |
+| **Estoque** | se a página disser "esgotado" → `estoque = 0` e **`ativo = nao`** (o produto sai da vitrine) |
+| **Voltou** | se a página voltar a ter o produto → `ativo = sim` e ele reaparece |
+| **Publicação** | com `--push`, commita e envia para o GitHub → o site atualiza em ~1 min |
+
+### Onde ele procura o preço (nessa ordem)
+
+1. **JSON-LD** (schema.org Product) — o mais confiável, presente em quase toda loja;
+2. **Microdata / Open Graph** (`product:price:amount`);
+3. **Seletor CSS** configurado em `tools/fontes-precos.json`, por domínio;
+4. **Regex genérica** (`R$ 12,34`) — último recurso, **nunca aplicada sozinha**.
+
+### Travas de segurança (importante)
+
+Um preço errado publicado na loja é pior do que preço nenhum. Por isso o script
+**não aplica** preço que:
+- veio só da regex (fonte frágil) → fica registrado como *suspeito*;
+- está fora da faixa de 50%–200% do preço atual → fica como *suspeito*;
+- está abaixo de R$ 0,50 → fica como *suspeito*.
+
+Para assumir o risco de propósito: `--aceitar-suspeito`.
+
+### Se o site não tem preço no HTML
+
+Muitas lojas montam o preço por JavaScript (o fornecedor `indupropil` é assim).
+Nesses casos, o caminho mais confiável é o **feed do fornecedor** (CSV/XML/JSON
+no host dele) — nesse caso é só apontar a coluna `link` para o feed ou pedir o
+feed para eu integrar.
+
+Para saber se o seu site serve preço de forma legível, o verificador mostra o
+que ele achou:
+
+```
+✓ Galão de detergente 5 litros verde preço mantido (R$ 23.90)  [JSON-LD]
+! Desinfetante 2 litros PET azul  preço R$ 2.27 implausível (-82%) — NÃO aplicado
+```
+
+### Automatizar (sem depender de você)
+
+Rode o script por cron na sua máquina ou no backend (Render):
+
+```bash
+0 */6 * * * cd /caminho/catalogo-online && python3 tools/sincronizar-precos.py --push
+```
+
+---
+
 ## Caminho 5 — Botar o link onde o tráfego já está
 
 - **Instagram**: Configurações → cole a URL do catálogo na *bio*.
