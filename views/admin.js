@@ -636,7 +636,7 @@ function renderConfig(root) {
   form.appendChild(field('Instruções de entrega', h('textarea', { class: 'input input--area', rows: '2', value: cfg.deliveryNote || '' })));
 
   form.appendChild(h('h2', { class: 'section-title', text: 'Segurança e dados' }));
-  form.appendChild(field('PIN do painel', h('input', { class: 'input', type: 'text', value: cfg.adminPin || '', placeholder: 'deixe vazio para não pedir' }), 'Protege o painel neste dispositivo'));
+  form.appendChild(field('PIN do painel', h('input', { class: 'input', type: 'text', value: cfg.adminPin || '', placeholder: 'deixe vazio para não pedir' }), 'Fica só neste navegador — nunca é gravado nos arquivos publicados (não vai para o GitHub). Nota: em site estático o PIN é uma trava de interface, não segurança de verdade.'));
   form.appendChild(field('URL da API (servidor)', h('input', { class: 'input', value: localStorage.getItem('loja.api') || '', placeholder: 'https://minhaapi.com.br' }), 'Deixe vazio para modo local (dados neste navegador)'));
 
   const remoteStatus = h('p', { class: 'hint' });

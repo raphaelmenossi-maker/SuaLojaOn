@@ -145,7 +145,11 @@ async function loadInitialData() {
     } catch { /* sem dados.json */ }
 
     if (!seed) seed = DEMO;
-    store.state.config = { ...store.state.config, ...(seed.config || {}) };
+    // o PIN do painel NUNCA vem de arquivo publicado (ficaria publico no GitHub);
+    // ele so existe no navegador de quem cadastrou.
+    const configPublicada = { ...(seed.config || {}) };
+    delete configPublicada.adminPin;
+    store.state.config = { ...store.state.config, ...configPublicada };
     store.state.products = Array.isArray(seed.products) ? seed.products : [];
     store.state.categories = store.deriveCategories();
     store.persist();
