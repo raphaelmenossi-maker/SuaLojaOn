@@ -17,7 +17,7 @@ No painel é **Configurações**; no arquivo remoto é o bloco `config` do seu `
 | `tagline` | banner da vitrine | `"Peças artesanais feitas à mão"` |
 | `city` | cidade na prévia do link (não aparece no banner) | `"Ribeirão Preto"` |
 | `logo` | logo no cabeçalho (link de imagem ou vazio) | `"https://.../logo.png"` |
-| `whatsapp` | botão do banner, rodapé e botão do pedido | `"55169936180637"` |
+| `whatsapp` | botão do banner, rodapé e botão do pedido | `"5516900000000"` |
 | `contactName` | nome de quem atende ("Falar com Raphael") | `"Raphael"` |
 | `instagram` | rodapé e hashtag nas publicações | `"@ateliedalu"` |
 | `facebook` | rodapé | `"minhaloja"` |
@@ -41,8 +41,8 @@ E os **produtos** ficam no array `products` do mesmo arquivo (campos na tabela d
 
 > Duas regras que economizam dor:
 > 1. `pixName` e `pixCity` aparecem para o **pagante** no app do banco — escreva sem acentos e em maiúsculas.
-> 2. `whatsapp` precisa ser só o número, com DDD e código do país: `55169936180637`
->    (55 = Brasil, 16 = DDD de Ribeirão Preto, 93618-0637 = o celular).
+> 2. `whatsapp` precisa ser só o número, com DDD e código do país: `5516900000000`
+>    (55 = Brasil, 16 = DDD, (16) 90000-0000 = exemplo).
 
 ---
 
