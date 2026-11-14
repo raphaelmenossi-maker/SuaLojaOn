@@ -9,7 +9,7 @@ neste mesmo repositório.
 2. Altere os produtos (`products`) ou as informações da loja (bloco `config`).
 3. Clique em **Commit changes**.
 4. Em ~1 minuto o site já mostra a versão nova:
-   **https://raphaelmenossi-maker.github.io/SuaLojaOn/**
+   **https://rfm92.github.io/SuaLojaOn/**
 
 ## Onde mexer em cada informação
 
@@ -45,4 +45,4 @@ Formato de um produto:
 
 ## Painel administrativo
 
-`https://raphaelmenossi-maker.github.io/SuaLojaOn/#/admin` — use o PIN definido em `config.adminPin`.
+`https://rfm92.github.io/SuaLojaOn/#/admin` — use o PIN definido em `config.adminPin`.

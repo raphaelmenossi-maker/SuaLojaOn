@@ -1,7 +1,7 @@
 # Como atualizar o código da loja no GitHub
 
-Repositório: **raphaelmenossi-maker/SuaLojaOn**
-Site: **https://raphaelmenossi-maker.github.io/SuaLojaOn/**
+Repositório: **rfm92/SuaLojaOn**
+Site: **https://rfm92.github.io/SuaLojaOn/**
 
 ---
 

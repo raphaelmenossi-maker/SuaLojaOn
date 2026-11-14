@@ -62,7 +62,8 @@
       "Jundiaí": 160,
       "Votuporanga": 160
     },
-    "updatedAt": "2026-11-14T04:26:44"
+    "updatedAt": "2026-11-14T04:26:44",
+    "remoteCatalogUrl": "https://rfm92.github.io/SuaLojaOn/catalogo.json"
   },
   "products": [
     {
